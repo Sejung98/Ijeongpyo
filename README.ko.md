@@ -1,4 +1,8 @@
-# follow_wollof
+> *이정표는 길손에게 얼마나 왔고 어디로 가야 하는지 알려 주던 길가의 표지입니다. 이 이정표는 각 Claude Code 세션이 계획의 어느 단계에 와 있는지 알려 줍니다.*
+
+# Ijeongpyo(이정표)
+
+예전 이름은 *follow_wollof*입니다. 명령어(`fw`, `follow.py`)와 설치 경로는 그 이름을 그대로 씁니다.
 
 [English](README.md)
 
@@ -283,3 +287,7 @@ docs/                    스크린샷 (데모 데이터)
 app/                     바로가기 아이콘 (macOS .icns · Windows .ico · png)
 session/                 fw deploy 로 설치되는 세션 쪽 도구
 ```
+
+## 라이선스
+
+MIT. [LICENSE](LICENSE) 참고.

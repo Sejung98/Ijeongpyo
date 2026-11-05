@@ -1,4 +1,8 @@
-# follow_wollof
+> *An ijeongpyo (이정표) is the Korean milestone post that tells travellers how far they have come and which way to go. This one tells you where each Claude Code session is in its plan.*
+
+# Ijeongpyo
+
+Formerly *follow_wollof*. The commands (`fw`, `follow.py`) and install paths keep that name.
 
 [한국어](README.ko.md)
 
@@ -27,7 +31,7 @@ It is plain Python with no third-party packages.
 ## Setup
 
 ```bash
-git clone https://github.com/Sejung98/follow_wollof.git
+git clone https://github.com/Sejung98/Ijeongpyo.git follow_wollof
 cd follow_wollof
 ./fw init        # creates config.ini
 ```
@@ -96,3 +100,7 @@ In the sessions view, click a panel to open it with its plan history, and drag a
 `./fw selftest` runs every part against a throwaway home folder, without touching your own setup. Worth running once on a new machine.
 
 The server only listens on 127.0.0.1.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
