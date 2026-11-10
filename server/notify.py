@@ -44,7 +44,9 @@ def summarize(s):
     for e in plan:   # the note given with `follow.py block` says why
         if e.get("op") == "state" and e.get("state") == "blocked":
             blocked[e.get("id")] = e.get("note") or ""
-    return {"status": s.get("status"), "since": (s.get("statusUpdatedAt") or 0) / 1000.0, "label": label,
+    # `claude -p --no-session-persistence` calls (this server's classifier, scripts in temp dirs) register like any
+    # session but never write a transcript (agent.py sets mtime only from one); they are not announced
+    return {"chat": bool(s.get("mtime")), "status": s.get("status"), "since": (s.get("statusUpdatedAt") or 0) / 1000.0, "label": label,
             "waitingFor": s.get("waitingFor"),
             "blocked": {n["title"]: blocked.get(n["id"], "") for n in nodes if n["state"] == "blocked"},
             "now": [n["title"] for n in nodes if n["state"] == "now"],
@@ -74,11 +76,11 @@ class Watcher:
         found = []
         for sid, p in prev.items():
             c = cur.get(sid)
-            if p["status"] in LIVE and (c is None or c["status"] == "ended"):
+            if p["chat"] and p["status"] in LIVE and (c is None or c["status"] == "ended"):
                 found.append(("ended", sid, p, "세션 종료", "Claude 세션이 닫혔습니다"))
         for sid, c in cur.items():
             p = prev.get(sid)
-            if not p:
+            if not p or not c["chat"]:
                 continue
             if c["status"] == "waiting" and p["status"] != "waiting":
                 why = c["waitingFor"] if isinstance(c["waitingFor"], str) and c["waitingFor"] else "권한 확인이나 답을 기다립니다"

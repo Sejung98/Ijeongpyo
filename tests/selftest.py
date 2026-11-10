@@ -458,8 +458,8 @@ def t_projects(home, env):
     sent = []
     w = notify.Watcher({"notify": {"enabled": True, "events": list(config.NOTIFY_EVENTS), "min_busy": 60}, "port": 7777},
                        send=lambda *a: sent.append(a))
-    ses = lambda sid, st, since, plan=None: {"sessionId": sid, "status": st, "statusUpdatedAt": since * 1000,
-                                             "title": "분석 " + sid, "plan": plan or []}
+    ses = lambda sid, st, since, plan=None, mtime=1: {"sessionId": sid, "status": st, "statusUpdatedAt": since * 1000,
+                                                      "title": "분석 " + sid, "plan": plan or [], "mtime": mtime}
     blocked = [{"op": "plan", "title": "T", "nodes": [{"id": "x", "title": "정렬"}]}, {"op": "next", "id": "x"},
                {"op": "state", "id": "x", "state": "blocked", "note": "경로 확인"}]
     w.update("lab", [ses("a", "busy", 1000), ses("b", "busy", 1000), ses("c", "idle", 900)], now=1000)
@@ -469,6 +469,8 @@ def t_projects(home, env):
     ok("알림을 누르면 그 세션 페이지", any(x["url"].endswith("/?s=lab/a") for x in got), got)
     got = w.update("lab", [ses("a", "idle", 1200), ses("b", "waiting", 1010, blocked)], now=1250)
     ok("세션 종료 알림", [x["kind"] for x in got] == ["ended"], got)
+    w.update("lab", [ses("a", "idle", 1200), ses("p", "busy", 1255, mtime=None)], now=1255)
+    ok("transcript 없는 claude -p 호출이 끝나도 알리지 않음", not w.update("lab", [ses("a", "idle", 1200)], now=1260))
     w.update("lab", [ses("d", "busy", 1300)], now=1300)
     ok("짧게 일하고 멈추면 알리지 않음", not w.update("lab", [ses("d", "idle", 1310)], now=1310))
     # epoch + offset: fromtimestamp() rejects negative times on Windows
